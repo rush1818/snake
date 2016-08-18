@@ -196,16 +196,18 @@
 	}
 
 	class Apple{
-	  constructor(rows, snakePos){
-	    this.pos = this.getPos(rows, snakePos);
+	  constructor(rows, snake){
+	    this.pos = this.getPos(rows, snake);
 	    this.type = "apple";
 	  }
 
-	  getPos(rows, snakePos){
+	  getPos(rows, snake){
 	    let newPos = [Math.floor(Math.random()*rows), Math.floor(Math.random()*rows)];
-
-	    if (coordEquals(newPos, snakePos)){
-	      return this.getPos(rows, snakePos);
+	    let snakePos = snake.renderPos();
+	    for (let i = 0; i < snakePos.length; i++){
+	      if (coordEquals(newPos, snakePos[i])){
+	        return this.getPos(rows, snake);
+	      }
 	    }
 	    return newPos;
 	  }
@@ -215,7 +217,7 @@
 	  constructor(){
 	    this.snake = new Snake();
 	    this.rows = 10;
-	    this.apple = new Apple(this.rows, this.snake.pos);
+	    this.apple = new Apple(this.rows, this.snake);
 	  }
 
 	  isValidPos(dir){
@@ -246,7 +248,7 @@
 	  checkEat(){
 	    if (coordEquals(this.snake.pos, this.apple.pos)){
 	      this.snake.eat(this.apple.pos);
-	      this.apple = new Apple(this.rows, this.snake.pos);
+	      this.apple = new Apple(this.rows, this.snake);
 	    }
 	  }
 	}
