@@ -32,12 +32,28 @@ class Snake {
     // Push current pos into segment
     // Pop 1 out of segment
     // then update head as line below
+    if (this.segments.length){
+      this.segments.pop();
+      this.segments.unshift(this.pos);
+    }
     this.pos = coordPlus(this.pos, moveDir);
+  }
+
+  renderPos(){
+    let head = this.pos.slice(0);
+    // debugger
+    let segs = this.segments.slice(0);
+    segs.push(head);
+    return segs;
   }
 
   turn(dir) {
     this.direction = dir;
     this.move();
+  }
+
+  eat(pos){
+    this.segments.unshift(pos);
   }
 
 }
@@ -46,21 +62,31 @@ function coordPlus(arr1, arr2){
   return [arr1[0]+arr2[0] , arr1[1]+arr2[1]];
 }
 
-
 function coordEquals(arr1, arr2){
   return arr1[0] === arr2[0] && arr1[1] === arr2[1];
 }
 
+class Apple{
+  constructor(rows, snakePos){
+    this.pos = this.getPos(rows, snakePos);
+    this.type = "apple";
+  }
 
-// function coordIsOpposite(arr1, arr2){
-//
-// }
+  getPos(rows, snakePos){
+    let newPos = [Math.floor(Math.random()*rows), Math.floor(Math.random()*rows)];
 
+    if (coordEquals(newPos, snakePos)){
+      return this.getPos(rows, snakePos);
+    }
+    return newPos;
+  }
+}
 
 class Board {
   constructor(){
     this.snake = new Snake();
     this.rows = 10;
+    this.apple = new Apple(this.rows, this.snake.pos);
   }
 
   isValidPos(dir){
@@ -75,17 +101,29 @@ class Board {
       changePos = DIRECTIONS.W;
     }
     let newPos = coordPlus(this.snake.pos, changePos);
-    return newPos[0] < this.rows && newPos[0] >=0 && newPos[1] >=0 && newPos[1] < this.rows;
+    return newPos[0] < this.rows && newPos[0] >=0 &&
+      newPos[1] >=0 && newPos[1] < this.rows;
   }
 
   move(dir){
     if (this.isValidPos(dir)){
+      this.checkEat();
       this.snake.turn(dir);
       return true;
     }
     return false;
   }
+
+  checkEat(){
+    if (coordEquals(this.snake.pos, this.apple.pos)){
+      this.snake.eat(this.apple.pos);
+      this.apple = new Apple(this.rows, this.snake.pos);
+    }
+  }
 }
 
 
-module.exports = Board;
+module.exports = {
+  Board: Board,
+  coordEquals: coordEquals,
+};

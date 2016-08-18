@@ -46,14 +46,19 @@ ul {
   display: inline-block;
   background: lightgray;
 }
-.square:hover{
+/*.square:hover{
   background-color: pink;
-}
+}*/
 
 .snake{
   background-color: green;
 }
 
-ul{
+/*ul{
   background-color: none;
+}*/
+
+
+.apple{
+  background-color: red;
 }

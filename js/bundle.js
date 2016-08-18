@@ -59,17 +59,20 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const Board = __webpack_require__(2);
+	const Board = __webpack_require__(2).Board;
+	const coordEquals = __webpack_require__(2).coordEquals;
 
 	class View{
 	  constructor(el){
 	    this.$el = el;
 	    this.board = new Board();
 	    this.snake = this.board.snake;
+	    // debugger
 	    this.bindEvents();
 	  }
 
 	  setupGrid(){
+	    this.apple = this.board.apple;
 	    for (var i = 0; i < this.board.rows; i++) {
 	      let $row = $("<ul></ul>");
 	      $row.addClass('row group');
@@ -78,8 +81,17 @@
 	        let $square = $("<li></li>");
 	        $square.addClass('square');
 	        $square.attr({"pos":[i,j]});
-	        if ((i === this.snake.pos[0]) && (j === this.snake.pos[1])) {
-	          $square.addClass('snake');
+	        // debugger
+	        this.snake.renderPos().forEach((pos) => {
+	          if(coordEquals(pos, [i,j])){
+	              $square.addClass('snake');
+	          }
+	        });
+	        // if(coordEquals(this.snake.pos, [i,j])){
+	        //   $square.addClass('snake');
+	        // }
+	        if(coordEquals(this.apple.pos, [i,j])){
+	          $square.addClass('apple');
 	        }
 	        $row.append($square);
 	      }
@@ -94,7 +106,7 @@
 	    });
 	  }
 	  step(){
-	    window.setInterval(()=>this.makeMove(),1000);
+	    window.setInterval(()=>this.makeMove(),500);
 	  }
 
 	  makeMove(dir){
@@ -149,12 +161,28 @@
 	    // Push current pos into segment
 	    // Pop 1 out of segment
 	    // then update head as line below
+	    if (this.segments.length){
+	      this.segments.pop();
+	      this.segments.unshift(this.pos);
+	    }
 	    this.pos = coordPlus(this.pos, moveDir);
+	  }
+
+	  renderPos(){
+	    let head = this.pos.slice(0);
+	    // debugger
+	    let segs = this.segments.slice(0);
+	    segs.push(head);
+	    return segs;
 	  }
 
 	  turn(dir) {
 	    this.direction = dir;
 	    this.move();
+	  }
+
+	  eat(pos){
+	    this.segments.unshift(pos);
 	  }
 
 	}
@@ -163,21 +191,31 @@
 	  return [arr1[0]+arr2[0] , arr1[1]+arr2[1]];
 	}
 
-
 	function coordEquals(arr1, arr2){
 	  return arr1[0] === arr2[0] && arr1[1] === arr2[1];
 	}
 
+	class Apple{
+	  constructor(rows, snakePos){
+	    this.pos = this.getPos(rows, snakePos);
+	    this.type = "apple";
+	  }
 
-	// function coordIsOpposite(arr1, arr2){
-	//
-	// }
+	  getPos(rows, snakePos){
+	    let newPos = [Math.floor(Math.random()*rows), Math.floor(Math.random()*rows)];
 
+	    if (coordEquals(newPos, snakePos)){
+	      return this.getPos(rows, snakePos);
+	    }
+	    return newPos;
+	  }
+	}
 
 	class Board {
 	  constructor(){
 	    this.snake = new Snake();
 	    this.rows = 10;
+	    this.apple = new Apple(this.rows, this.snake.pos);
 	  }
 
 	  isValidPos(dir){
@@ -192,20 +230,32 @@
 	      changePos = DIRECTIONS.W;
 	    }
 	    let newPos = coordPlus(this.snake.pos, changePos);
-	    return newPos[0] < this.rows && newPos[0] >=0 && newPos[1] >=0 && newPos[1] < this.rows;
+	    return newPos[0] < this.rows && newPos[0] >=0 &&
+	      newPos[1] >=0 && newPos[1] < this.rows;
 	  }
 
 	  move(dir){
 	    if (this.isValidPos(dir)){
+	      this.checkEat();
 	      this.snake.turn(dir);
 	      return true;
 	    }
 	    return false;
 	  }
+
+	  checkEat(){
+	    if (coordEquals(this.snake.pos, this.apple.pos)){
+	      this.snake.eat(this.apple.pos);
+	      this.apple = new Apple(this.rows, this.snake.pos);
+	    }
+	  }
 	}
 
 
-	module.exports = Board;
+	module.exports = {
+	  Board: Board,
+	  coordEquals: coordEquals,
+	};
 
 
 /***/ }

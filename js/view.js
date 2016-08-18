@@ -1,14 +1,17 @@
-const Board = require("./snake.js");
+const Board = require("./snake.js").Board;
+const coordEquals = require("./snake.js").coordEquals;
 
 class View{
   constructor(el){
     this.$el = el;
     this.board = new Board();
     this.snake = this.board.snake;
+    // debugger
     this.bindEvents();
   }
 
   setupGrid(){
+    this.apple = this.board.apple;
     for (var i = 0; i < this.board.rows; i++) {
       let $row = $("<ul></ul>");
       $row.addClass('row group');
@@ -17,8 +20,17 @@ class View{
         let $square = $("<li></li>");
         $square.addClass('square');
         $square.attr({"pos":[i,j]});
-        if ((i === this.snake.pos[0]) && (j === this.snake.pos[1])) {
-          $square.addClass('snake');
+        // debugger
+        this.snake.renderPos().forEach((pos) => {
+          if(coordEquals(pos, [i,j])){
+              $square.addClass('snake');
+          }
+        });
+        // if(coordEquals(this.snake.pos, [i,j])){
+        //   $square.addClass('snake');
+        // }
+        if(coordEquals(this.apple.pos, [i,j])){
+          $square.addClass('apple');
         }
         $row.append($square);
       }
@@ -33,7 +45,7 @@ class View{
     });
   }
   step(){
-    window.setInterval(()=>this.makeMove(),1000);
+    window.setInterval(()=>this.makeMove(),500);
   }
 
   makeMove(dir){
