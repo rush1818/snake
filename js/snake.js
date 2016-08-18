@@ -27,11 +27,7 @@ class Snake {
     }else if (this.direction === 38){
       moveDir = DIRECTIONS.W;
     }
-    // When snake eats an apple, we push head into segment and reset head
-        // to new pos
-    // Push current pos into segment
-    // Pop 1 out of segment
-    // then update head as line below
+
     if (this.segments.length){
       this.segments.pop();
       this.segments.unshift(this.pos);

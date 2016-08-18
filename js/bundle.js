@@ -67,7 +67,6 @@
 	    this.$el = el;
 	    this.board = new Board();
 	    this.snake = this.board.snake;
-	    // debugger
 	    this.bindEvents();
 	  }
 
@@ -81,15 +80,12 @@
 	        let $square = $("<li></li>");
 	        $square.addClass('square');
 	        $square.attr({"pos":[i,j]});
-	        // debugger
+
 	        this.snake.renderPos().forEach((pos) => {
 	          if(coordEquals(pos, [i,j])){
 	              $square.addClass('snake');
 	          }
 	        });
-	        // if(coordEquals(this.snake.pos, [i,j])){
-	        //   $square.addClass('snake');
-	        // }
 	        if(coordEquals(this.apple.pos, [i,j])){
 	          $square.addClass('apple');
 	        }
@@ -113,7 +109,6 @@
 	    if (!dir){
 	      dir = this.snake.direction;
 	    }
-	    // this.snake.turn(dir);
 	    this.board.move(dir);
 	    this.$el.children().remove();
 	    this.setupGrid();
@@ -156,11 +151,7 @@
 	    }else if (this.direction === 38){
 	      moveDir = DIRECTIONS.W;
 	    }
-	    // When snake eats an apple, we push head into segment and reset head
-	        // to new pos
-	    // Push current pos into segment
-	    // Pop 1 out of segment
-	    // then update head as line below
+
 	    if (this.segments.length){
 	      this.segments.pop();
 	      this.segments.unshift(this.pos);
