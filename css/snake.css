@@ -7,7 +7,7 @@ span, article, footer, time, small {
   padding: 0;
   border: 0;
   outline: 0;
-  font: sans-serif;
+  font-family: Futura;
   color: inherit;
   text-align: center;
   text-decoration: inherit;
@@ -47,5 +47,13 @@ ul {
   background: lightgray;
 }
 .square:hover{
-  background-color: yellow;
+  background-color: pink;
+}
+
+.snake{
+  background-color: green;
+}
+
+ul{
+  background-color: none;
 }

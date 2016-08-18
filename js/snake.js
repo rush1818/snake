@@ -9,7 +9,7 @@ const DIRECTIONS = {
 
 class Snake {
   constructor(){
-    this.direction = "N";
+    this.direction = 38;
     this.segments = [];
     this.pos = [0,0];
   }
@@ -18,13 +18,13 @@ class Snake {
 
   move(){
     let moveDir = 1;
-    if (this.direction === "N"){
+    if (this.direction === 37){
       moveDir = DIRECTIONS.N;
-    }else if (this.direction === "E"){
+    }else if (this.direction === 40){ //FIXED
       moveDir = DIRECTIONS.E;
-    }else if (this.direction === "S"){
+    }else if (this.direction === 39){
       moveDir = DIRECTIONS.S;
-    }else if (this.direction === "W"){
+    }else if (this.direction === 38){
       moveDir = DIRECTIONS.W;
     }
     this.pos = coordPlus(this.pos, moveDir);
@@ -32,6 +32,8 @@ class Snake {
 
   turn(dir) {
     this.direction = dir;
+    this.move();
+    // debugger
   }
 
 }

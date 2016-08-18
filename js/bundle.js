@@ -46,7 +46,7 @@
 
 	const View = __webpack_require__(1);
 	$( () => {
-	  let $el = $('.snake');
+	  let $el = $('.board');
 	  let view = new View($el);
 	  view.setupGrid();
 
@@ -65,7 +65,8 @@
 	  constructor(el){
 	    this.$el = el;
 	    this.board = new Board();
-	    // this.bindEvents();
+	    this.snake = this.board.snake;
+	    this.bindEvents();
 	  }
 
 	  setupGrid(){
@@ -77,19 +78,27 @@
 	        let $square = $("<li></li>");
 	        $square.addClass('square');
 	        $square.attr({"pos":[i,j]});
+	        if ((i === this.snake.pos[0]) && (j === this.snake.pos[1])) {
+	          $square.addClass('snake');
+	        }
 	        $row.append($square);
 	      }
 	    }
 	  }
 
-	  // bindEvents(){
-	  //   let $square = $(".square");
-	  //   $square.on("click", event => {
-	  //     const currentTarget = event.currentTarget;
-	  //     const $currentTarget = $(currentTarget);
-	  //     this.makeMove($currentTarget);
-	  //   });
-	  // }
+	  bindEvents(){
+	    let $square = $(".square");
+	    $(document).on("keydown", event => {
+	      const turnDir = event.which;
+	      this.makeMove(turnDir);
+	    });
+	  }
+
+	  makeMove(turnDir){
+	    this.snake.turn(turnDir);
+	    this.$el.children().remove();
+	    this.setupGrid();
+	  }
 	}
 
 	module.exports = View;
@@ -110,7 +119,7 @@
 
 	class Snake {
 	  constructor(){
-	    this.direction = "N";
+	    this.direction = 38;
 	    this.segments = [];
 	    this.pos = [0,0];
 	  }
@@ -119,13 +128,13 @@
 
 	  move(){
 	    let moveDir = 1;
-	    if (this.direction === "N"){
+	    if (this.direction === 37){
 	      moveDir = DIRECTIONS.N;
-	    }else if (this.direction === "E"){
+	    }else if (this.direction === 40){ //FIXED
 	      moveDir = DIRECTIONS.E;
-	    }else if (this.direction === "S"){
+	    }else if (this.direction === 39){
 	      moveDir = DIRECTIONS.S;
-	    }else if (this.direction === "W"){
+	    }else if (this.direction === 38){
 	      moveDir = DIRECTIONS.W;
 	    }
 	    this.pos = coordPlus(this.pos, moveDir);
@@ -133,6 +142,8 @@
 
 	  turn(dir) {
 	    this.direction = dir;
+	    this.move();
+	    // debugger
 	  }
 
 	}

@@ -1,6 +1,6 @@
 const View = require('./view.js');
 $( () => {
-  let $el = $('.snake');
+  let $el = $('.board');
   let view = new View($el);
   view.setupGrid();
 
