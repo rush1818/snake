@@ -9,11 +9,11 @@ class View{
   }
 
   setupGrid(){
-    for (var i = 0; i < 10; i++) {
+    for (var i = 0; i < this.board.rows; i++) {
       let $row = $("<ul></ul>");
       $row.addClass('row group');
       this.$el.append($row);
-      for (var j = 0; j < 10; j++) {
+      for (var j = 0; j < this.board.rows; j++) {
         let $square = $("<li></li>");
         $square.addClass('square');
         $square.attr({"pos":[i,j]});
@@ -28,20 +28,20 @@ class View{
   bindEvents(){
     let $square = $(".square");
     $(document).on("keydown", event => {
-      const turnDir = event.which;
-      this.makeMove(turnDir);
+      const dir = event.which;
+      this.makeMove(dir);
     });
   }
   step(){
     window.setInterval(()=>this.makeMove(),1000);
   }
 
-  makeMove(turnDir){
-    if (!turnDir){
-      turnDir = this.snake.direction;
+  makeMove(dir){
+    if (!dir){
+      dir = this.snake.direction;
     }
-    console.log(turnDir);
-    this.snake.turn(turnDir);
+    // this.snake.turn(dir);
+    this.board.move(dir);
     this.$el.children().remove();
     this.setupGrid();
   }

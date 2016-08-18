@@ -37,9 +37,6 @@ class Snake {
 
   turn(dir) {
     this.direction = dir;
-    // if (isValidMOve) {
-    //
-    // }
     this.move();
   }
 
@@ -63,6 +60,30 @@ function coordEquals(arr1, arr2){
 class Board {
   constructor(){
     this.snake = new Snake();
+    this.rows = 10;
+  }
+
+  isValidPos(dir){
+    let changePos = [];
+    if (dir === 37){
+      changePos = DIRECTIONS.N;
+    }else if (dir === 40){
+      changePos = DIRECTIONS.E;
+    }else if (dir === 39){
+      changePos = DIRECTIONS.S;
+    }else if (dir === 38){
+      changePos = DIRECTIONS.W;
+    }
+    let newPos = coordPlus(this.snake.pos, changePos);
+    return newPos[0] < this.rows && newPos[0] >=0 && newPos[1] >=0 && newPos[1] < this.rows;
+  }
+
+  move(dir){
+    if (this.isValidPos(dir)){
+      this.snake.turn(dir);
+      return true;
+    }
+    return false;
   }
 }
 
