@@ -20,7 +20,7 @@ class Snake {
     let moveDir = 1;
     if (this.direction === 37){
       moveDir = DIRECTIONS.N;
-    }else if (this.direction === 40){ //FIXED
+    }else if (this.direction === 40){
       moveDir = DIRECTIONS.E;
     }else if (this.direction === 39){
       moveDir = DIRECTIONS.S;

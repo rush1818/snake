@@ -3,7 +3,7 @@ $( () => {
   let $el = $('.board');
   let view = new View($el);
   view.setupGrid();
-
+  view.step();
   // view.bindEvents();
 
 });

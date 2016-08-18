@@ -32,8 +32,15 @@ class View{
       this.makeMove(turnDir);
     });
   }
+  step(){
+    // window.setInterval(()=>this.makeMove(),1000);
+  }
 
   makeMove(turnDir){
+    if (!turnDir){
+      turnDir = this.snake.direction;
+    }
+    console.log(turnDir);
     this.snake.turn(turnDir);
     this.$el.children().remove();
     this.setupGrid();
