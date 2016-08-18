@@ -94,7 +94,7 @@
 	    });
 	  }
 	  step(){
-	    // window.setInterval(()=>this.makeMove(),1000);
+	    window.setInterval(()=>this.makeMove(),1000);
 	  }
 
 	  makeMove(turnDir){
@@ -154,9 +154,10 @@
 
 	  turn(dir) {
 	    this.direction = dir;
-	    if (isValidMOve) {
-
-	    }this.move();
+	    // if (isValidMOve) {
+	    //
+	    // }
+	    this.move();
 	  }
 
 	}

@@ -33,7 +33,7 @@ class View{
     });
   }
   step(){
-    // window.setInterval(()=>this.makeMove(),1000);
+    window.setInterval(()=>this.makeMove(),1000);
   }
 
   makeMove(turnDir){

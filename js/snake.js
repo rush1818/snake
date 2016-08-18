@@ -37,9 +37,10 @@ class Snake {
 
   turn(dir) {
     this.direction = dir;
-    if (isValidMOve) {
-
-    }this.move();
+    // if (isValidMOve) {
+    //
+    // }
+    this.move();
   }
 
 }
