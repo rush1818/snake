@@ -144,13 +144,19 @@
 	    }else if (this.direction === 38){
 	      moveDir = DIRECTIONS.W;
 	    }
+	    // When snake eats an apple, we push head into segment and reset head
+	        // to new pos
+	    // Push current pos into segment
+	    // Pop 1 out of segment
+	    // then update head as line below
 	    this.pos = coordPlus(this.pos, moveDir);
 	  }
 
 	  turn(dir) {
 	    this.direction = dir;
-	    this.move();
-	    // debugger
+	    if (isValidMOve) {
+
+	    }this.move();
 	  }
 
 	}
