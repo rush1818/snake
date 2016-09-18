@@ -37,14 +37,20 @@ class View{
     let $square = $(".square");
     $(document).on("keydown", event => {
       const dir = event.which;
+      this.board.firstMove = false;
       this.makeMove(dir);
     });
   }
   step(){
-    window.setInterval(()=>this.makeMove(),500);
+    this.stepInterval = window.setInterval(()=>this.makeMove(),200);
   }
 
   makeMove(dir){
+    if (this.board.gameOver && !this.board.firstMove){
+      alert('Game Over!');
+      window.clearInterval(this.stepInterval);
+      return;
+    }
     if (!dir){
       dir = this.snake.direction;
     }

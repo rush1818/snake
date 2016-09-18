@@ -29,8 +29,8 @@ class Snake {
     }
 
     if (this.segments.length){
-      this.segments.pop();
       this.segments.unshift(this.pos);
+      this.segments.pop();
     }
     this.pos = coordPlus(this.pos, moveDir);
   }
@@ -85,6 +85,8 @@ class Board {
     this.snake = new Snake();
     this.rows = 10;
     this.apple = new Apple(this.rows, this.snake);
+    this.gameOver = false;
+    this.firstMove = true;
   }
 
   isValidPos(dir){
@@ -97,19 +99,40 @@ class Board {
       changePos = DIRECTIONS.S;
     }else if (dir === 38){
       changePos = DIRECTIONS.W;
+    } else {
+      return 'invalid key';
     }
     let newPos = coordPlus(this.snake.pos, changePos);
+
+    if (this.checkSnakeEat(newPos)) return true;
+
     return newPos[0] < this.rows && newPos[0] >=0 &&
       newPos[1] >=0 && newPos[1] < this.rows;
   }
 
   move(dir){
-    if (this.isValidPos(dir)){
+    let validPos = this.isValidPos(dir);
+    if (validPos === true){
       this.checkEat();
       this.snake.turn(dir);
       return true;
+    } else if (validPos === 'invalid key'){
+      this.snake.turn(this.snake.direction);
+    } else if (!validPos && !this.firstMove){
+      console.log('here');
+      this.gameOver = true;
     }
     return false;
+  }
+
+  checkSnakeEat(newPos){
+    let collision = false;
+    this.snake.segments.forEach(pos => {
+      if (coordEquals(newPos, pos)){
+        collision = true;
+      }
+    });
+    return collision;
   }
 
   checkEat(){

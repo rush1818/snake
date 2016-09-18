@@ -98,14 +98,20 @@
 	    let $square = $(".square");
 	    $(document).on("keydown", event => {
 	      const dir = event.which;
+	      this.board.firstMove = false;
 	      this.makeMove(dir);
 	    });
 	  }
 	  step(){
-	    window.setInterval(()=>this.makeMove(),500);
+	    this.stepInterval = window.setInterval(()=>this.makeMove(),200);
 	  }
 
 	  makeMove(dir){
+	    if (this.board.gameOver && !this.board.firstMove){
+	      alert('Game Over!');
+	      window.clearInterval(this.stepInterval);
+	      return;
+	    }
 	    if (!dir){
 	      dir = this.snake.direction;
 	    }
@@ -153,8 +159,8 @@
 	    }
 
 	    if (this.segments.length){
-	      this.segments.pop();
 	      this.segments.unshift(this.pos);
+	      this.segments.pop();
 	    }
 	    this.pos = coordPlus(this.pos, moveDir);
 	  }
@@ -209,6 +215,8 @@
 	    this.snake = new Snake();
 	    this.rows = 10;
 	    this.apple = new Apple(this.rows, this.snake);
+	    this.gameOver = false;
+	    this.firstMove = true;
 	  }
 
 	  isValidPos(dir){
@@ -221,19 +229,40 @@
 	      changePos = DIRECTIONS.S;
 	    }else if (dir === 38){
 	      changePos = DIRECTIONS.W;
+	    } else {
+	      return 'invalid key';
 	    }
 	    let newPos = coordPlus(this.snake.pos, changePos);
+
+	    if (this.checkSnakeEat(newPos)) return true;
+
 	    return newPos[0] < this.rows && newPos[0] >=0 &&
 	      newPos[1] >=0 && newPos[1] < this.rows;
 	  }
 
 	  move(dir){
-	    if (this.isValidPos(dir)){
+	    let validPos = this.isValidPos(dir);
+	    if (validPos === true){
 	      this.checkEat();
 	      this.snake.turn(dir);
 	      return true;
+	    } else if (validPos === 'invalid key'){
+	      this.snake.turn(this.snake.direction);
+	    } else if (!validPos && !this.firstMove){
+	      console.log('here');
+	      this.gameOver = true;
 	    }
 	    return false;
+	  }
+
+	  checkSnakeEat(newPos){
+	    let collision = false;
+	    this.snake.segments.forEach(pos => {
+	      if (coordEquals(newPos, pos)){
+	        collision = true;
+	      }
+	    });
+	    return collision;
 	  }
 
 	  checkEat(){
